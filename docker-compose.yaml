@@ -1,0 +1,40 @@
+services:
+  bedrock:
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    volumes:
+      - ./server/worlds:/bedrock/worlds
+
+    ports:
+      - "19132:19132/udp"
+
+    tty: true
+    restart: always
+
+    networks:
+      imphnen-craft-network:
+        ipv4_address: 172.100.0.2
+
+  frp:
+    build:
+      context: ./frp
+      dockerfile: Dockerfile
+
+    tty: true
+    restart: always
+
+    depends_on:
+      - bedrock
+
+    networks:
+      imphnen-craft-network:
+        ipv4_address: 172.100.0.3
+
+networks:
+  imphnen-craft-network:
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.100.0.0/16
+          gateway: 172.100.0.1
