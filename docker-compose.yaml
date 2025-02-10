@@ -1,16 +1,19 @@
 services:
-  bedrock:
-    build:
-      context: ./server
-      dockerfile: Dockerfile
-    volumes:
-      - ./server/worlds:/bedrock/worlds
+  endstone:
+    build: .
+    container_name: endstone
+    command: endstone -y
+    image: endstone/endstone:latest
 
     ports:
       - "19132:19132/udp"
 
+    volumes:
+      - ./server:/home/endstone/bedrock_server:rw
+
     tty: true
-    restart: always
+    restart: unless-stopped
+    stdin_open: true
 
     networks:
       imphnen-craft-network:
